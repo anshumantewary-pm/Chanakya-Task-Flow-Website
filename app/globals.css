@@ -1,26 +1,92 @@
 @import "tailwindcss";
 
+/* Chanakya palette: palm-leaf parchment, temple gold, saffron and maroon.
+   Dark mode is a lamp-lit night: deep indigo with gold. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --paper: #f3e7cc;
+  --leaf: #fbf4e1;
+  --leaf-strong: #f6eacb;
+  --ink: #3a2213;
+  --ink-soft: #7a5a3c;
+  --line: #dcc596;
+  --gold: #b0802a;
+  --saffron: #c4531a;
+  --saffron-deep: #a3410f;
+  --maroon: #7d1f1f;
+  --on-accent: #fff8ea;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --paper: #17111f;
+    --leaf: #221a2e;
+    --leaf-strong: #2b2139;
+    --ink: #f2e5c9;
+    --ink-soft: #c2aa86;
+    --line: #43344f;
+    --gold: #d6aa4f;
+    --saffron: #e9883b;
+    --saffron-deep: #f19c55;
+    --maroon: #e07a6a;
+    --on-accent: #1d1308;
   }
 }
 
+@theme inline {
+  --color-paper: var(--paper);
+  --color-leaf: var(--leaf);
+  --color-leaf-strong: var(--leaf-strong);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-gold: var(--gold);
+  --color-saffron: var(--saffron);
+  --color-saffron-deep: var(--saffron-deep);
+  --color-maroon: var(--maroon);
+  --color-on-accent: var(--on-accent);
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --font-sans: var(--font-mukta);
+  --font-display: var(--font-eczar);
+  --font-mono: var(--font-mukta);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--paper);
+  /* faint palm-leaf fibres and a warm lamp glow */
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, color-mix(in srgb, var(--saffron) 14%, transparent), transparent 70%),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--gold) 5%, transparent) 0 1px, transparent 1px 7px);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-mukta), system-ui, sans-serif;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--saffron) 30%, transparent);
+}
+
+/* Temple-border band used at the top of cards and the header */
+.temple-band {
+  height: 6px;
+  background:
+    linear-gradient(135deg, var(--gold) 25%, transparent 25%) -3px 0 / 12px 6px,
+    linear-gradient(225deg, var(--gold) 25%, transparent 25%) -3px 0 / 12px 6px,
+    var(--maroon);
+}
+
+@keyframes slow-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mandala-spin {
+  animation: slow-turn 240s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mandala-spin {
+    animation: none;
+  }
 }

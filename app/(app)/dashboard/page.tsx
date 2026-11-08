@@ -3,12 +3,12 @@ import { Suspense } from "react";
 import { deleteMyAccount } from "../actions";
 import { requireProfile } from "@/lib/session";
 import { addDays, localDate, prettyDate } from "@/lib/time";
-import { card, muted, secondaryButton } from "@/lib/ui";
+import { card, muted, secondaryButton, heading } from "@/lib/ui";
 
 export default function DashboardPage() {
   return (
     <>
-      <h1 className="text-2xl font-semibold">Dashboard</h1>
+      <h1 className={heading}>Dashboard</h1>
       <Suspense fallback={<p className={muted}>Loading your progress…</p>}>
         <Stats />
       </Suspense>
@@ -64,7 +64,7 @@ async function Stats() {
       </div>
 
       <section className={card}>
-        <h2 className="mb-4 font-semibold">Your last 7 days</h2>
+        <h2 className="mb-4 font-display text-lg font-semibold text-maroon">Your last 7 days</h2>
         <ul className="flex flex-col gap-2">
           {week.map((d) => {
             const s = byDate.get(d) ?? { done: 0, total: 0 };
@@ -72,10 +72,10 @@ async function Stats() {
             return (
               <li key={d} className="flex items-center gap-3 text-sm">
                 <span className="w-28 shrink-0">{prettyDate(d, "short")}</span>
-                <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
-                  <span className="block h-full rounded-full bg-emerald-500" style={{ width: `${width}%` }} />
+                <span className="h-2.5 flex-1 overflow-hidden rounded-full border border-line bg-paper">
+                  <span className="block h-full rounded-full bg-gradient-to-r from-gold to-saffron" style={{ width: `${width}%` }} />
                 </span>
-                <span className="w-12 shrink-0 text-right text-zinc-500">
+                <span className="w-12 shrink-0 text-right text-ink-soft tabular-nums">
                   {s.done}/{s.total}
                 </span>
               </li>
@@ -91,7 +91,7 @@ function Stat({ label, value, note }: { label: string; value: string; note: stri
   return (
     <div className={card}>
       <p className={muted}>{label}</p>
-      <p className="text-3xl font-semibold">{value}</p>
+      <p className="font-display text-3xl font-semibold text-maroon">{value}</p>
       <p className={muted}>{note}</p>
     </div>
   );
@@ -100,17 +100,17 @@ function Stat({ label, value, note }: { label: string; value: string; note: stri
 function Settings() {
   return (
     <section className={`${card} flex flex-col gap-4`}>
-      <h2 className="font-semibold">Settings</h2>
+      <h2 className="font-display text-lg font-semibold text-maroon">Settings</h2>
       <Link href="/onboarding" className={`${secondaryButton} self-start`}>
         Change wake, sleep and available hours
       </Link>
-      <form action={deleteMyAccount} className="flex flex-col gap-2 border-t border-zinc-200 pt-4 dark:border-zinc-800">
+      <form action={deleteMyAccount} className="flex flex-col gap-2 border-t border-line pt-4">
         <p className="text-sm font-medium">Delete my account</p>
         <p className={muted}>This permanently removes your account, tasks and plans. It can&apos;t be undone.</p>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" name="confirm" value="yes" required /> I understand, delete everything
         </label>
-        <button className="self-start rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">
+        <button className="self-start rounded-lg bg-maroon px-4 py-2 text-sm font-semibold text-on-accent hover:opacity-90">
           Delete my account
         </button>
       </form>

@@ -24,7 +24,7 @@ export function LoginForm() {
         <p className={errorText}>That confirmation link didn&apos;t work. Try signing in, or sign up again.</p>
       )}
       {state?.error && <p className={errorText}>{state.error}</p>}
-      {state?.info && <p className="text-sm text-emerald-700 dark:text-emerald-400">{state.info}</p>}
+      {state?.info && <p className="text-sm font-medium text-gold">{state.info}</p>}
 
       <div className="flex gap-3">
         <button name="mode" value="signin" disabled={pending} className={`${primaryButton} flex-1`}>

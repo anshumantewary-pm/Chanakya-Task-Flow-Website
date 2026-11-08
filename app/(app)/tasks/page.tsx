@@ -4,15 +4,15 @@ import { addTask, deleteTask } from "../actions";
 import { TaskForm } from "./task-form";
 import { requireUser } from "@/lib/session";
 import { prettyDate, weekdayName } from "@/lib/time";
-import { card, muted, priorityBadge, secondaryButton } from "@/lib/ui";
+import { card, muted, priorityBadge, secondaryButton, heading } from "@/lib/ui";
 import type { TaskRow } from "@/lib/types";
 
 export default function TasksPage() {
   return (
     <>
-      <h1 className="text-2xl font-semibold">Tasks</h1>
+      <h1 className={heading}>Tasks</h1>
       <section className={card}>
-        <h2 className="mb-4 font-semibold">Add a task</h2>
+        <h2 className="mb-4 font-display text-lg font-semibold text-maroon">Add a task</h2>
         <TaskForm action={addTask} submitLabel="Add task" />
       </section>
       <Suspense fallback={<p className={muted}>Loading your tasks…</p>}>

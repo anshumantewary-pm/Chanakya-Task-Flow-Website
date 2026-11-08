@@ -1,17 +1,20 @@
 // Shared Tailwind class names so every screen looks the same.
-export const card = "rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900";
+// Colours come from the palette in app/globals.css (paper, leaf, ink, saffron, maroon, gold).
+export const card =
+  "relative rounded-xl border border-line bg-leaf p-5 shadow-[0_1px_0_var(--line),0_8px_24px_-16px_color-mix(in_srgb,var(--maroon)_45%,transparent)]";
 export const input =
-  "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 outline-none focus:border-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100 dark:focus:border-zinc-300";
-export const label = "flex flex-col gap-1 text-sm font-medium text-zinc-700 dark:text-zinc-300";
+  "w-full rounded-lg border border-line bg-paper/60 px-3 py-2 text-base text-ink outline-none placeholder:text-ink-soft/60 focus:border-saffron focus:ring-2 focus:ring-saffron/20";
+export const label = "flex flex-col gap-1 text-sm font-medium text-ink-soft";
 export const primaryButton =
-  "rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300";
+  "rounded-lg bg-saffron px-4 py-2 text-sm font-semibold text-on-accent shadow-sm hover:bg-saffron-deep disabled:opacity-50";
 export const secondaryButton =
-  "rounded-lg border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-100 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800";
-export const muted = "text-sm text-zinc-500 dark:text-zinc-400";
-export const errorText = "text-sm text-red-600 dark:text-red-400";
+  "rounded-lg border border-line bg-leaf px-3 py-1.5 text-sm font-medium text-ink hover:border-gold hover:bg-leaf-strong disabled:opacity-50";
+export const muted = "text-sm text-ink-soft";
+export const errorText = "text-sm text-maroon";
+export const heading = "font-display text-3xl font-semibold text-ink";
 
 export const priorityBadge: Record<string, string> = {
-  high: "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300",
-  medium: "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300",
-  low: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
+  high: "border border-maroon/30 bg-maroon/10 text-maroon",
+  medium: "border border-saffron/30 bg-saffron/10 text-saffron-deep",
+  low: "border border-line bg-paper text-ink-soft",
 };

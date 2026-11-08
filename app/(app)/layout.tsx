@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { signOut } from "./actions";
+import { Logo } from "@/components/ornaments";
 
 const links = [
   { href: "/today", label: "Today" },
@@ -9,21 +10,22 @@ const links = [
 
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
-    <div className="flex flex-1 flex-col bg-zinc-50 dark:bg-black">
-      <header className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-        <nav className="mx-auto flex w-full max-w-2xl items-center gap-4 px-4 py-3">
-          <Link href="/today" className="font-semibold">
-            Chanakya
+    <div className="flex flex-1 flex-col">
+      <div className="temple-band" />
+      <header className="border-b border-line bg-leaf/80 backdrop-blur">
+        <nav className="mx-auto flex w-full max-w-2xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
+          <Link href="/today">
+            <Logo />
           </Link>
-          <div className="flex flex-1 gap-3 text-sm">
+          <div className="flex flex-1 gap-4 text-sm font-semibold">
             {links.map((l) => (
-              <Link key={l.href} href={l.href} className="text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white">
+              <Link key={l.href} href={l.href} className="text-ink-soft hover:text-saffron">
                 {l.label}
               </Link>
             ))}
           </div>
           <form action={signOut}>
-            <button className="text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-white">Sign out</button>
+            <button className="text-sm text-ink-soft hover:text-maroon">Sign out</button>
           </form>
         </nav>
       </header>

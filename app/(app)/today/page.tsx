@@ -5,7 +5,7 @@ import { VisitTracker } from "./visit-tracker";
 import { requireProfile } from "@/lib/session";
 import { hhmm, localDate, prettyDate } from "@/lib/time";
 import { dayMinutes, isDueOn } from "@/lib/planner";
-import { card, muted, primaryButton, priorityBadge, secondaryButton } from "@/lib/ui";
+import { card, muted, primaryButton, priorityBadge, secondaryButton, heading } from "@/lib/ui";
 import type { PlanItemRow, PlanStatus, TaskRow } from "@/lib/types";
 
 export default function TodayPage() {
@@ -59,7 +59,7 @@ async function Today() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className={muted}>{prettyDate(date)}</p>
-          <h1 className="text-2xl font-semibold">Today</h1>
+          <h1 className={heading}>Today</h1>
           {items.length > 0 && (
             <p className={muted}>
               {done} of {items.length} done
@@ -96,7 +96,7 @@ async function Today() {
 
       {leftOver.length > 0 && (
         <section className="flex flex-col gap-2">
-          <h2 className="font-semibold">Not in today&apos;s plan</h2>
+          <h2 className="font-display text-lg font-semibold text-maroon">Not in today&apos;s plan</h2>
           <p className={muted}>
             {items.length > 0
               ? "These didn't fit in your hours today, or were added after you planned."
@@ -120,7 +120,7 @@ function PlanItem({ item }: { item: PlanItemRow }) {
   return (
     <li className={`${card} flex flex-col gap-3 !p-4 ${finished ? "opacity-60" : ""}`}>
       <div className="flex items-start gap-3">
-        <p className="w-28 shrink-0 font-mono text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="w-28 shrink-0 font-display text-sm font-semibold text-gold tabular-nums">
           {hhmm(item.start_time)}–{hhmm(item.end_time)}
         </p>
         <p className={`flex-1 font-medium ${item.status === "done" ? "line-through" : ""}`}>
@@ -152,7 +152,7 @@ function PlanItem({ item }: { item: PlanItemRow }) {
             <button className={secondaryButton}>Cancel</button>
           </form>
           <details className="ml-auto text-sm">
-            <summary className="cursor-pointer text-zinc-500">Change</summary>
+            <summary className="cursor-pointer text-ink-soft hover:text-saffron">Change</summary>
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <form action={moveItem.bind(null, item.id)} className="flex items-center gap-2">
                 <input
@@ -160,7 +160,7 @@ function PlanItem({ item }: { item: PlanItemRow }) {
                   name="start_time"
                   defaultValue={hhmm(item.start_time)}
                   required
-                  className="rounded-lg border border-zinc-300 px-2 py-1 dark:border-zinc-700 dark:bg-zinc-950"
+                  className="rounded-lg border border-line bg-paper/60 px-2 py-1 text-ink"
                 />
                 <button className={secondaryButton}>Move</button>
               </form>

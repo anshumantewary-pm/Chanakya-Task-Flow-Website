@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { updateTask } from "../../actions";
 import { TaskForm } from "../task-form";
 import { requireUser } from "@/lib/session";
-import { card, muted } from "@/lib/ui";
+import { card, muted, heading } from "@/lib/ui";
 import type { TaskRow } from "@/lib/types";
 
 export default function EditTaskPage({ params }: PageProps<"/tasks/[id]">) {
@@ -13,7 +13,7 @@ export default function EditTaskPage({ params }: PageProps<"/tasks/[id]">) {
       <Link href="/tasks" className={muted}>
         ← Back to tasks
       </Link>
-      <h1 className="text-2xl font-semibold">Edit task</h1>
+      <h1 className={heading}>Edit task</h1>
       <section className={card}>
         <Suspense fallback={<p className={muted}>Loading…</p>}>
           <EditTask params={params} />
