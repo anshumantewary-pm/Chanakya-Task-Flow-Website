@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { track } from "@/lib/analytics";
 
 export type AuthState = { error?: string; info?: string } | null;
 
@@ -25,12 +26,14 @@ export async function authenticate(_prev: AuthState, formData: FormData): Promis
       options: { emailRedirectTo: `${origin}/auth/callback` },
     });
     if (error) return { error: error.message };
+    if (data.user) track(data.user.id, "signed up");
     if (!data.session) {
       return { info: "Almost there: open the confirmation link we just emailed you, then sign in." };
     }
   } else {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) return { error: error.message };
+    track(data.user.id, "signed in");
   }
 
   redirect("/today");

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { moveItem, planMyDay, removeItem, setStatus } from "../actions";
+import { VisitTracker } from "./visit-tracker";
 import { requireProfile } from "@/lib/session";
 import { hhmm, localDate, prettyDate } from "@/lib/time";
 import { dayMinutes, isDueOn } from "@/lib/planner";
@@ -9,9 +10,12 @@ import type { PlanItemRow, PlanStatus, TaskRow } from "@/lib/types";
 
 export default function TodayPage() {
   return (
-    <Suspense fallback={<p className={muted}>Loading your day…</p>}>
-      <Today />
-    </Suspense>
+    <>
+      <VisitTracker />
+      <Suspense fallback={<p className={muted}>Loading your day…</p>}>
+        <Today />
+      </Suspense>
+    </>
   );
 }
 

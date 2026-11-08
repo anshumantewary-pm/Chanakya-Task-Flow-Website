@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/session";
 import { isValidTimeZone } from "@/lib/time";
 import { toMinutes } from "@/lib/planner";
+import { track } from "@/lib/analytics";
 
 export type ProfileState = { error?: string } | null;
 
@@ -28,6 +29,7 @@ export async function saveProfile(_prev: ProfileState, formData: FormData): Prom
     return { error: `Available hours must be more than 0 and at most ${Math.floor(awake / 60)} (your waking hours).` };
   }
 
+  const { data: existing } = await supabase.from("profiles").select("user_id").eq("user_id", userId).maybeSingle();
   const { error } = await supabase.from("profiles").upsert({
     user_id: userId,
     user_type: userType,
@@ -37,6 +39,7 @@ export async function saveProfile(_prev: ProfileState, formData: FormData): Prom
     timezone: isValidTimeZone(tz) ? tz : "UTC",
   });
   if (error) return { error: error.message };
+  track(userId, existing ? "settings updated" : "onboarding completed", { user_type: userType, daily_hours: hours });
 
   redirect("/today");
 }

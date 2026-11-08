@@ -6,6 +6,7 @@ import { requireProfile, requireUser } from "@/lib/session";
 import { localDate, localTime } from "@/lib/time";
 import { planDay, toHHMM, toMinutes, type Priority, type RepeatRule } from "@/lib/planner";
 import type { PlanItemRow, PlanStatus, TaskRow } from "@/lib/types";
+import { track, type EventName } from "@/lib/analytics";
 
 // ---------- Tasks ----------
 
@@ -32,11 +33,17 @@ function readTask(formData: FormData) {
 }
 
 export async function addTask(_prev: TaskState, formData: FormData): Promise<TaskState> {
-  const { supabase } = await requireUser();
+  const { supabase, userId } = await requireUser();
   const parsed = readTask(formData);
   if (!parsed.task) return { error: parsed.error };
   const { error } = await supabase.from("tasks").insert(parsed.task);
   if (error) return { error: error.message };
+  track(userId, "task added", {
+    priority: parsed.task.priority,
+    repeat_rule: parsed.task.repeat_rule,
+    duration_minutes: parsed.task.duration_minutes,
+    has_deadline: parsed.task.deadline !== null,
+  });
   refresh();
   return { ok: true };
 }
@@ -47,6 +54,7 @@ export async function updateTask(id: string, _prev: TaskState, formData: FormDat
   if (!parsed.task) return { error: parsed.error };
   const { error } = await supabase.from("tasks").update(parsed.task).eq("id", id).eq("user_id", userId);
   if (error) return { error: error.message };
+  track(userId, "task edited");
   redirect("/tasks");
 }
 
@@ -55,6 +63,7 @@ export async function deleteTask(id: string) {
   const { supabase, userId } = await requireUser();
   await supabase.from("tasks").update({ active: false }).eq("id", id).eq("user_id", userId);
   await supabase.from("plan_items").delete().eq("task_id", id).eq("status", "planned");
+  track(userId, "task deleted");
   refresh();
 }
 
@@ -107,14 +116,28 @@ export async function planMyDay() {
     const { error } = await supabase.from("plan_items").insert(plan.items.map((i) => ({ ...i, date })));
     if (error) throw new Error(error.message);
   }
+  track(userId, "plan my day pressed", {
+    replan: todays.length > 0,
+    planned_count: plan.items.length,
+    unscheduled_count: plan.unscheduled.length,
+    kept_count: kept.length,
+  });
   refresh();
 }
 
 // ---------- Editing today's plan ----------
 
+const statusEvent: Record<PlanStatus, EventName> = {
+  done: "task done",
+  postponed: "task postponed",
+  cancelled: "task cancelled",
+  planned: "task undone",
+};
+
 export async function setStatus(id: string, status: PlanStatus) {
   const { supabase, userId } = await requireUser();
-  await supabase.from("plan_items").update({ status }).eq("id", id).eq("user_id", userId);
+  const { error } = await supabase.from("plan_items").update({ status }).eq("id", id).eq("user_id", userId);
+  if (!error) track(userId, statusEvent[status]);
   refresh();
 }
 
@@ -131,13 +154,21 @@ export async function moveItem(id: string, formData: FormData) {
     .update({ start_time: start, end_time: toHHMM(toMinutes(start) + length), edited: true })
     .eq("id", id)
     .eq("user_id", userId);
+  track(userId, "plan item moved");
   refresh();
 }
 
 export async function removeItem(id: string) {
   const { supabase, userId } = await requireUser();
   await supabase.from("plan_items").delete().eq("id", id).eq("user_id", userId);
+  track(userId, "plan item removed");
   refresh();
+}
+
+/** Called once per page load of Today (from the browser, so prefetching doesn't count as a visit). */
+export async function recordVisit() {
+  const { userId } = await requireUser();
+  track(userId, "app opened");
 }
 
 // ---------- Account ----------
@@ -150,9 +181,10 @@ export async function signOut() {
 
 export async function deleteMyAccount(formData: FormData) {
   if (formData.get("confirm") !== "yes") return;
-  const { supabase } = await requireUser();
+  const { supabase, userId } = await requireUser();
   const { error } = await supabase.rpc("delete_my_account");
   if (error) throw new Error(error.message);
+  track(userId, "account deleted");
   await supabase.auth.signOut();
   redirect("/login");
 }
