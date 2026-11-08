@@ -55,7 +55,7 @@ Measured with PostHog events.
 ## 10. Risks and open questions
 - Rule-based plans may feel unrealistic: let users edit and record how often they do.
 - Users may stop entering tasks: keep adding a task under 15 seconds.
-- Open: whether to show the wisdom card in v1.
+- Decided (8 Nov 2026): no wisdom card in v1. It is a nice-to-have, and v1 focuses on planning and completion. Revisit in v1.1.
 
 ## 11. Security and privacy
 Supabase Auth for login. Row Level Security on every table so users read and write only their own rows. No secrets in code (.env.local and Vercel environment variables). Users can delete their account data.
